@@ -1,1 +1,3 @@
 # super-calculator
+
+## Assumptions
