@@ -22,15 +22,22 @@ public class EmployeeSuperController: ControllerBase
     [HttpPost("process-quarterly")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<EmployeeSuperQuarterlyVarianceResponse> GetQuarterlyVariances([FromForm] EmployeeSuperQuarterlyVarianceRequest request)
+    public async Task<ActionResult<EmployeeSuperQuarterlyVarianceResponse>> GetQuarterlyVariances([FromForm] EmployeeSuperQuarterlyVarianceRequest request)
     {
         var convertedRequest = await _requestConverterService.GetRawDataProcessingRequest(request);
-
-        var response = new EmployeeSuperQuarterlyVarianceResponse()
+        try
         {
-            Summary = await _employeeSuperService.ProcessEmployeeSuperQuarterlyVariances(convertedRequest)
-        };
-        
-        return response;
+            var response = new EmployeeSuperQuarterlyVarianceResponse()
+            {
+                Summary = await _employeeSuperService.ProcessEmployeeSuperQuarterlyVariances(convertedRequest)
+            };
+
+            return response;
+        }
+        catch (Exception ex) when (ex is InvalidDataException or
+                                   InvalidOperationException)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

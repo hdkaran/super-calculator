@@ -31,24 +31,32 @@ public class RawDataReaderService: IRawDataReaderService
                 }
             });
             ThrowIfInvalid(dataset);
-            
-            foreach (DataTable table in dataset.Tables)
+
+            try
             {
-                switch (table.TableName)
+                foreach (DataTable table in dataset.Tables)
                 {
-                    case RawDataConstants.Disbursements:
-                        rawEmployeeSuperData.Disbursements = BuildDisbursements(table);
-                        break;
-                    case RawDataConstants.Payslips:
-                        rawEmployeeSuperData.Payslips = BuildPayslips(table);
-                        break;
-                    case RawDataConstants.PayCodes:
-                        rawEmployeeSuperData.PayCodes = BuildPayCodes(table);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unknown Datatable table name found.");
+                    switch (table.TableName)
+                    {
+                        case RawDataConstants.Disbursements:
+                            rawEmployeeSuperData.Disbursements = BuildDisbursements(table);
+                            break;
+                        case RawDataConstants.Payslips:
+                            rawEmployeeSuperData.Payslips = BuildPayslips(table);
+                            break;
+                        case RawDataConstants.PayCodes:
+                            rawEmployeeSuperData.PayCodes = BuildPayCodes(table);
+                            break;
+                        default:
+                            throw new InvalidOperationException($"Unknown Datatable table name found.");
+                    }
                 }
             }
+            catch (Exception ex) when (ex is FormatException or InvalidCastException)
+            {
+                throw new InvalidDataException("There is dirty data in the dataset provided.");
+            }
+            
 
             return rawEmployeeSuperData;
         });
@@ -59,7 +67,7 @@ public class RawDataReaderService: IRawDataReaderService
         var validationResult = _rawDataValidator.Validate(dataset);
         if (!validationResult.IsValid)
         {
-            throw new InvalidDataException(validationResult.Errors.ToString());
+            throw new InvalidDataException(string.Join( ',',validationResult.Errors.Select(x=>x.ErrorMessage).ToList()));
         }
     }
 

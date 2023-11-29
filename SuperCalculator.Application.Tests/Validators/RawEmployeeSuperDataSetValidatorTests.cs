@@ -52,6 +52,6 @@ public class RawEmployeeSuperDataSetValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Tables)
-            .WithErrorMessage("Some tables are missing required columns.");
+            .WithErrorMessage("Some tables are missing required columns. ##Could be a nicer error message##");
     }
 }

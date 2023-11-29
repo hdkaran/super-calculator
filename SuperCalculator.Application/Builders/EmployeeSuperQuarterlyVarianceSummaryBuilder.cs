@@ -37,7 +37,7 @@ public class EmployeeSuperQuarterlyVarianceSummaryBuilder: IEmployeeSuperQuarter
         var employeePayDates = employeePayslips.Select(x => x.End).ToList();
         var quartersEmployeeWasPaidIn = _dateTimeService.GetQuartersForDates(employeePayDates).DistinctBy(x=>x.From);
 
-        foreach (var quarter in quartersEmployeeWasPaidIn)
+        foreach (var quarter in quartersEmployeeWasPaidIn.OrderBy(x=>x.From))
         {
             quarterlyVariance.QuarterlyEmployeeSuperVariances ??= new List<EmployeeSuperVariance>();
             
@@ -61,7 +61,6 @@ public class EmployeeSuperQuarterlyVarianceSummaryBuilder: IEmployeeSuperQuarter
 
             quarterlyVariance.QuarterlyEmployeeSuperVariances.Add(employeeSuperVariance);
         }
-        
         return quarterlyVariance;
     }
 }
