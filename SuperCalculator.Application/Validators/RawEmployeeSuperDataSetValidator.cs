@@ -37,7 +37,7 @@ public class RawEmployeeSuperDataSetValidator: AbstractValidator<DataSet>
         {
             RuleFor(set => set.Tables).Must(DoesAllThreeSetsExist)
                 .WithMessage("Worksheets must be named 'Disbursements', 'Payslips' and 'PayCodes'.");
-            RuleFor(set => set.Tables).Must(HaveValidTableStructure).WithMessage("Some tables are missing required columns.");
+            RuleFor(set => set.Tables).Must(HaveValidTableStructure).WithMessage("Some tables are missing required columns. ##Could be a nicer error message##");
         });
     }
 
