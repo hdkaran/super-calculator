@@ -52,7 +52,7 @@ public class EmployeeSuperQuarterlyVarianceSummaryBuilder: IEmployeeSuperQuarter
             employeeSuperVariance.TotalDisbursed = Math.Round(employeeDisbursements
                 .Where(x =>
                     x.PaymentMade >= new DateTime(quarter.From.Year, quarter.From.Month, DateTimeConstants.SuperPayDayStart) &&
-                    x.PaymentMade <= new DateTime(quarter.To.Year, quarter.To.Month, DateTimeConstants.SuperPayDayEnd) &&
+                    x.PaymentMade <= new DateTime(quarter.To.Year, quarter.To.Month + 1, DateTimeConstants.SuperPayDayEnd) &&
                     x.EmployeeCode == emp)
                 .Select(x => x.SgcAmount)
                 .Sum(), 2);
